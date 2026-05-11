@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionário KPI — Siemens Healthineers</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --sh-teal:#009999; --sh-teal-dark:#007a7a; --sh-teal-light:#e0f5f5; --sh-teal-mid:#b3e0e0;
+    --sh-orange:#ec6602; --sh-orange-light:#fdf0e6;
+    --sh-white:#ffffff; --sh-off:#f5f7f7;
+    --sh-border-gray:rgba(0,0,0,0.09); --sh-text:#1a1a1a; --sh-text-mid:#3d3d3d; --sh-muted:#6b7b7b;
+    --radius:10px; --radius-sm:7px;
+  }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Source Sans 3',sans-serif; background:var(--sh-off); color:var(--sh-text); min-height:100vh; overflow-x:hidden; }
+  .topbar { background:var(--sh-teal); height:4px; }
+
+  .navbar { background:var(--sh-white); border-bottom:1px solid var(--sh-border-gray); padding:0 40px; }
+  .navbar-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .sh-logo { display:flex; align-items:center; gap:12px; }
+  .sh-logo-icon { width:36px; height:36px; background:var(--sh-teal); border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .sh-logo-icon svg { width:22px; height:22px; display:block; }
+  .sh-logo-name { font-size:15px; font-weight:600; color:var(--sh-text); line-height:1.2; }
+  .sh-logo-tagline { font-size:10px; font-weight:300; color:var(--sh-muted); }
+  .navbar-right { font-size:12px; color:var(--sh-muted); text-align:right; line-height:1.5; }
+
+  .hero { background:var(--sh-teal); position:relative; overflow:hidden; }
+  .hero-pattern { position:absolute; inset:0; background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 20px); }
+  .hero-circle { position:absolute; border-radius:50%; border:1px solid rgba(255,255,255,0.1); }
+  .hero-circle-1 { width:400px; height:400px; top:-200px; right:-100px; }
+  .hero-circle-2 { width:250px; height:250px; top:-60px; right:120px; }
+  .hero-circle-3 { width:600px; height:600px; bottom:-350px; left:-150px; }
+  .hero-inner { position:relative; max-width:860px; margin:0 auto; padding:56px 40px 52px; }
+  .hero-eyebrow { display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); border-radius:4px; padding:5px 12px; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.9); margin-bottom:22px; animation:fadeUp 0.5s ease both; }
+  .eyebrow-dot { width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.8); animation:blink 2.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero-title { font-family:'Source Serif 4',serif; font-size:clamp(26px,4.5vw,40px); font-weight:600; color:white; line-height:1.2; margin-bottom:14px; animation:fadeUp 0.5s 0.08s ease both; }
+  .hero-title em { font-style:italic; font-weight:400; color:rgba(255,255,255,0.85); }
+  .hero-desc { font-size:15px; font-weight:300; color:rgba(255,255,255,0.75); line-height:1.75; max-width:560px; margin-bottom:36px; animation:fadeUp 0.5s 0.16s ease both; }
+  .hero-stats { display:flex; animation:fadeUp 0.5s 0.24s ease both; border:1px solid rgba(255,255,255,0.2); border-radius:var(--radius); overflow:hidden; width:fit-content; background:rgba(255,255,255,0.08); }
+  .hero-stat { padding:14px 28px; display:flex; flex-direction:column; gap:2px; position:relative; }
+  .hero-stat+.hero-stat::before { content:''; position:absolute; left:0; top:20%; bottom:20%; width:1px; background:rgba(255,255,255,0.2); }
+  .hero-stat-val { font-size:20px; font-weight:600; color:white; line-height:1; }
+  .hero-stat-label { font-size:11px; color:rgba(255,255,255,0.55); font-weight:300; text-transform:uppercase; letter-spacing:0.05em; }
+
+  .accent-bar { background:var(--sh-orange); padding:11px 40px; }
+  .accent-bar-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; gap:10px; font-size:12px; color:white; font-weight:600; }
+  .accent-icon { width:16px; height:16px; flex-shrink:0; }
+
+  .main { max-width:860px; margin:0 auto; padding:44px 40px 80px; }
+
+  .progress-block { margin-bottom:32px; animation:fadeUp 0.4s ease both; }
+  .progress-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+  .progress-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--sh-muted); }
+  .progress-frac { font-size:12px; color:var(--sh-muted); }
+  .progress-track { height:3px; background:var(--sh-teal-mid); border-radius:99px; overflow:hidden; margin-bottom:10px; }
+  .progress-fill { height:100%; background:var(--sh-teal); border-radius:99px; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); }
+  .step-dots { display:flex; gap:5px; }
+  .step-dot { width:6px; height:6px; border-radius:50%; background:var(--sh-teal-mid); transition:all 0.25s; }
+  .step-dot.active { background:var(--sh-teal); transform:scale(1.5); }
+  .step-dot.done { background:var(--sh-teal); opacity:0.5; }
+
+  .q-card { background:white; border:1px solid var(--sh-border-gray); border-top:3px solid transparent; border-radius:var(--radius); padding:32px 36px; margin-bottom:18px; box-shadow:0 1px 12px rgba(0,0,0,0.05); transition:border-top-color 0.3s; animation:slideIn 0.3s cubic-bezier(0.4,0,0.2,1) both; }
+  .q-card.answered { border-top-color:var(--sh-teal); }
+  @keyframes slideIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  .q-meta { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+  .q-tag { background:var(--sh-teal-light); color:var(--sh-teal-dark); border-radius:4px; padding:3px 9px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; }
+  .q-tag.rq { background:var(--sh-orange-light); color:var(--sh-orange); }
+  .q-question { font-family:'Source Serif 4',serif; font-size:19px; font-weight:400; color:var(--sh-text); line-height:1.45; margin-bottom:8px; }
+  .q-hint { font-size:13px; color:var(--sh-muted); font-weight:300; margin-bottom:20px; line-height:1.5; }
+
+  .free-input { width:100%; border:1.5px solid rgba(0,0,0,0.12); border-radius:var(--radius-sm); padding:13px 16px; font-size:15px; font-family:'Source Sans 3',sans-serif; font-weight:300; color:var(--sh-text); background:var(--sh-off); resize:none; min-height:96px; outline:none; transition:border-color 0.2s,background 0.2s,box-shadow 0.2s; line-height:1.6; }
+  .free-input.single { min-height:auto; height:50px; resize:none; }
+  .free-input:focus { border-color:var(--sh-teal); background:white; box-shadow:0 0 0 3px rgba(0,153,153,0.1); }
+  .free-input::placeholder { color:rgba(107,123,123,0.55); }
+
+  .scale-grid { display:grid; grid-template-columns:repeat(10,1fr); gap:7px; margin-bottom:8px; }
+  .scale-btn { aspect-ratio:1; border:1.5px solid rgba(0,0,0,0.1); border-radius:var(--radius-sm); background:var(--sh-off); color:var(--sh-muted); font-size:14px; font-weight:600; font-family:'Source Sans 3',sans-serif; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; }
+  .scale-btn:hover { background:var(--sh-teal-light); border-color:var(--sh-teal); color:var(--sh-teal-dark); transform:translateY(-2px); box-shadow:0 3px 8px rgba(0,153,153,0.15); }
+  .scale-btn.selected { background:var(--sh-teal); border-color:var(--sh-teal); color:white; transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,153,153,0.3); }
+  .scale-btn.selected.hi { background:var(--sh-orange); border-color:var(--sh-orange); box-shadow:0 4px 12px rgba(236,102,2,0.3); }
+  .scale-ends { display:flex; justify-content:space-between; padding:0 1px; }
+  .scale-end { font-size:11px; color:var(--sh-muted); max-width:130px; line-height:1.3; }
+  .scale-end:last-child { text-align:right; }
+
+  .nav-row { display:flex; align-items:center; gap:10px; animation:fadeUp 0.4s 0.1s ease both; }
+  .btn { display:inline-flex; align-items:center; gap:7px; padding:11px 22px; border-radius:var(--radius-sm); font-size:14px; font-weight:600; font-family:'Source Sans 3',sans-serif; cursor:pointer; border:none; outline:none; transition:all 0.18s; }
+  .btn-outline { background:white; color:var(--sh-muted); border:1.5px solid rgba(0,0,0,0.12); }
+  .btn-outline:hover:not(:disabled) { background:var(--sh-off); color:var(--sh-text); border-color:rgba(0,0,0,0.2); }
+  .btn-teal { background:var(--sh-teal); color:white; box-shadow:0 2px 10px rgba(0,153,153,0.2); }
+  .btn-teal:hover:not(:disabled) { background:var(--sh-teal-dark); transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,153,153,0.3); }
+  .btn-teal:active:not(:disabled) { transform:translateY(0); }
+  .btn:disabled { opacity:0.35; cursor:not-allowed; }
+  .nav-step { margin-left:auto; font-size:13px; color:var(--sh-muted); }
+
+  .submit-overlay { display:none; position:fixed; inset:0; background:rgba(0,153,153,0.08); backdrop-filter:blur(4px); z-index:100; align-items:center; justify-content:center; }
+  .submit-overlay.active { display:flex; }
+  .submit-box { background:white; border-radius:var(--radius); padding:40px 48px; text-align:center; box-shadow:0 8px 40px rgba(0,0,0,0.12); border-top:4px solid var(--sh-teal); max-width:340px; }
+  .submit-spinner { width:40px; height:40px; border:3px solid var(--sh-teal-light); border-top-color:var(--sh-teal); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 18px; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .submit-box h3 { font-family:'Source Serif 4',serif; font-size:18px; color:var(--sh-text); margin-bottom:6px; }
+  .submit-box p { font-size:13px; color:var(--sh-muted); font-weight:300; }
+
+  .results-section { display:none; }
+  .results-banner { background:var(--sh-teal); border-radius:var(--radius); padding:30px 36px; margin-bottom:24px; display:flex; align-items:flex-start; gap:20px; position:relative; overflow:hidden; animation:fadeUp 0.4s ease both; }
+  .results-banner::after { content:''; position:absolute; right:-60px; top:-60px; width:220px; height:220px; border-radius:50%; border:1px solid rgba(255,255,255,0.15); }
+  .res-check { width:44px; height:44px; flex-shrink:0; background:rgba(255,255,255,0.18); border-radius:50%; display:flex; align-items:center; justify-content:center; margin-top:2px; }
+  .res-check svg { width:22px; height:22px; }
+  .res-banner-text h2 { font-family:'Source Serif 4',serif; font-size:22px; font-weight:600; color:white; margin-bottom:5px; }
+  .res-banner-text p { font-size:14px; color:rgba(255,255,255,0.65); font-weight:300; margin-bottom:14px; }
+  .res-chips { display:flex; gap:8px; flex-wrap:wrap; }
+  .res-chip { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); border-radius:4px; padding:3px 10px; font-size:11px; color:rgba(255,255,255,0.9); font-weight:600; }
+  .results-list { display:flex; flex-direction:column; gap:10px; }
+  .res-card { background:white; border:1px solid var(--sh-border-gray); border-radius:var(--radius); padding:20px 24px; box-shadow:0 1px 8px rgba(0,0,0,0.04); animation:fadeUp 0.4s ease both; }
+  .res-card-top { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+  .res-tag { background:var(--sh-teal-light); color:var(--sh-teal-dark); border-radius:4px; padding:2px 9px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; }
+  .res-tag.rq { background:var(--sh-orange-light); color:var(--sh-orange); }
+  .res-question { font-size:12px; color:var(--sh-muted); flex:1; line-height:1.4; }
+  .res-free { font-size:15px; color:var(--sh-text-mid); line-height:1.65; padding:11px 14px; background:var(--sh-off); border-radius:var(--radius-sm); border-left:3px solid var(--sh-teal); font-weight:300; }
+  .res-scale { display:flex; align-items:center; gap:16px; }
+  .res-num { font-family:'Source Serif 4',serif; font-size:30px; font-weight:600; color:var(--sh-teal); min-width:48px; line-height:1; }
+  .res-num sup { font-family:'Source Sans 3',sans-serif; font-size:13px; color:var(--sh-muted); font-weight:300; }
+  .res-bar-wrap { flex:1; }
+  .res-bar-track { height:5px; background:var(--sh-teal-light); border-radius:99px; overflow:hidden; margin-bottom:5px; }
+  .res-bar-fill { height:100%; background:var(--sh-teal); border-radius:99px; transition:width 0.9s cubic-bezier(0.4,0,0.2,1); }
+  .res-bar-ends { display:flex; justify-content:space-between; font-size:10px; color:rgba(107,123,123,0.6); }
+  .results-actions { display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; align-items:center; animation:fadeUp 0.4s 0.2s ease both; }
+  .error-msg { font-size:13px; color:#c0392b; display:none; margin-top:10px; padding:10px 14px; background:#fdf0f0; border-radius:var(--radius-sm); border-left:3px solid #c0392b; }
+
+  .footer { border-top:1px solid var(--sh-border-gray); padding:20px 40px; text-align:center; font-size:11px; color:var(--sh-muted); font-weight:300; background:white; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  @media (max-width:620px) {
+    .hero-inner,.main { padding-left:20px; padding-right:20px; }
+    .navbar,.accent-bar,.footer { padding-left:20px; padding-right:20px; }
+    .q-card { padding:22px 20px; }
+    .hero-stats { width:100%; }
+    .hero-stat { padding:12px 16px; flex:1; }
+    .scale-grid { gap:4px; }
+    .scale-btn { font-size:12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="submit-overlay" id="submit-overlay">
+  <div class="submit-box">
+    <div class="submit-spinner"></div>
+    <h3>A enviar respostas…</h3>
+    <p>As suas respostas estão a ser guardadas em segurança.</p>
+  </div>
+</div>
+
+<div class="topbar"></div>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="sh-logo">
+      <div class="sh-logo-icon">
+        <svg viewBox="0 0 22 22" fill="none">
+          <path d="M2 11h3l2.5-6 3 12 2.5-9L15 11h5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="sh-logo-name">Siemens Healthineers</div>
+        <div class="sh-logo-tagline">Performance Intelligence</div>
+      </div>
+    </div>
+    <div class="navbar-right">Dissertação de Mestrado<br>ISCTE Business School · 2026</div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-circle hero-circle-1"></div>
+  <div class="hero-circle hero-circle-2"></div>
+  <div class="hero-circle hero-circle-3"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><div class="eyebrow-dot"></div>Estudo em curso · Confidencial</div>
+    <h1 class="hero-title">Monitorização de <em>KPIs</em><br>na Siemens Healthineers</h1>
+    <p class="hero-desc">Este questionário faz parte de uma investigação académica sobre sistemas de gestão de desempenho. As suas respostas são totalmente anónimas e serão utilizadas exclusivamente para fins científicos.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val">8</div><div class="hero-stat-label">Perguntas</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">~3 min</div><div class="hero-stat-label">Duração</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">100%</div><div class="hero-stat-label">Anónimo</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="accent-bar">
+  <div class="accent-bar-inner">
+    <svg class="accent-icon" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="7" stroke="white" stroke-width="1.5"/>
+      <path d="M8 5v4M8 11v.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    A sua participação contribui para o desenvolvimento de uma solução de Business Intelligence adaptada às necessidades da Siemens Healthineers.
+  </div>
+</div>
+
+<div class="main">
+
+  <div id="survey-section">
+    <div class="progress-block">
+      <div class="progress-row">
+        <span class="progress-label">Progresso</span>
+        <span class="progress-frac" id="progress-frac">Pergunta 1 de 8</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:12.5%"></div></div>
+      <div class="step-dots" id="step-dots"></div>
+    </div>
+    <div id="q-container"></div>
+    <div class="nav-row">
+      <button class="btn btn-outline" id="btn-prev" onclick="navigate(-1)" disabled>← Anterior</button>
+      <button class="btn btn-teal" id="btn-next" onclick="navigate(1)">Seguinte →</button>
+      <span class="nav-step" id="nav-step">1 / 8</span>
+    </div>
+    <div class="error-msg" id="error-msg">Ocorreu um erro ao enviar as respostas. Por favor, tente novamente.</div>
+  </div>
+
+  <div class="results-section" id="results-section">
+    <div class="results-banner">
+      <div class="res-check">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M5 11l4.5 4.5L17 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="res-banner-text">
+        <h2>Respostas submetidas com sucesso</h2>
+        <p>Muito obrigado pela sua participação. As suas respostas foram guardadas e serão tratadas de forma confidencial.</p>
+        <div class="res-chips">
+          <span class="res-chip">✓ Guardado no Google Sheets</span>
+          <span class="res-chip">✓ Anónimo</span>
+          <span class="res-chip">✓ Confidencial</span>
+        </div>
+      </div>
+    </div>
+    <div class="results-list" id="results-list"></div>
+    <div class="results-actions">
+      <button class="btn btn-outline" onclick="resetSurvey()">Responder novamente</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Siemens Healthineers &nbsp;·&nbsp; Dissertação de Mestrado em Gestão &nbsp;·&nbsp; ISCTE Business School &nbsp;·&nbsp; João Novais &nbsp;·&nbsp; 2026
+</div>
+
+<script>
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbziQ3uHRu7yigt4fCi5bM93go20wLTKAc44YW2Bi5esk758ZUm1L-Umbc7VUp3qW588ew/exec";
+
+const questions = [
+  {
+    id:'Q1', rq:null, type:'free-single',
+    text:'Há quantos anos trabalha na Siemens Healthineers?',
+    hint:'Indique o número de anos de experiência na empresa, arredondado ao ano.',
+    placeholder:'Ex: 3 anos',
+    short:'Anos de experiência na empresa'
+  },
+  {
+    id:'Q2', rq:null, type:'free',
+    text:'Qual é a sua função actual e quais são as suas principais responsabilidades?',
+    hint:'Descreva brevemente o seu cargo e as tarefas do dia-a-dia que lhe estão atribuídas.',
+    placeholder:'Ex: Técnico de logística, responsável pela gestão de stocks e coordenação de entregas...',
+    short:'Função actual e responsabilidades'
+  },
+  {
+    id:'Q3', rq:'RQ1', type:'scale',
+    text:'Na sua opinião, existem falhas ou dificuldades na forma como os KPIs são actualmente monitorizados na empresa?',
+    hint:'1 = Não existem quaisquer falhas &nbsp;·&nbsp; 10 = Existem falhas muito graves',
+    low:'Sem falhas', high:'Falhas muito graves',
+    short:'Falhas na monitorização actual de KPIs'
+  },
+  {
+    id:'Q4', rq:'RQ2', type:'scale',
+    text:'De que forma as limitações actuais afectam o seu trabalho e a capacidade de tomar decisões com base em dados?',
+    hint:'1 = Não têm qualquer impacto &nbsp;·&nbsp; 10 = Têm um impacto muito elevado',
+    low:'Sem impacto', high:'Impacto muito elevado',
+    short:'Impacto das limitações no trabalho diário'
+  },
+  {
+    id:'Q5', rq:'RQ3', type:'scale',
+    text:'Considera que o sector da tecnologia médica está a caminhar para uma gestão mais automatizada e orientada por dados?',
+    hint:'1 = Não existe essa tendência &nbsp;·&nbsp; 10 = É uma tendência muito clara e acelerada',
+    low:'Sem tendência', high:'Tendência muito clara',
+    short:'Tendência de evolução do sector'
+  },
+  {
+    id:'Q6', rq:'RQ4', type:'scale',
+    text:'Em que medida a utilização de sistemas de informação dispersos e pouco integrados dificulta a monitorização do desempenho?',
+    hint:'1 = Não dificulta &nbsp;·&nbsp; 10 = É a principal causa das dificuldades',
+    low:'Não dificulta', high:'Principal causa',
+    short:'Dispersão de sistemas como causa das dificuldades'
+  },
+  {
+    id:'Q7', rq:'RQ5', type:'scale',
+    text:'Qual é a necessidade que sente de ter uma plataforma centralizada com dashboards e KPIs actualizados para a sua área de trabalho?',
+    hint:'1 = Não sinto qualquer necessidade &nbsp;·&nbsp; 10 = É uma necessidade urgente',
+    low:'Sem necessidade', high:'Necessidade urgente',
+    short:'Necessidade de uma solução centralizada'
+  },
+  {
+    id:'Q8', rq:'RQ6', type:'scale',
+    text:'Que impacto positivo espera que uma nova solução de monitorização de KPIs venha a ter na sua área e na organização?',
+    hint:'1 = Não espero grande impacto &nbsp;·&nbsp; 10 = Espero um impacto muito significativo',
+    low:'Impacto reduzido', high:'Impacto muito significativo',
+    short:'Impacto esperado da nova solução'
+  }
+];
+
+let current = 0;
+let answers = new Array(8).fill(null);
+
+function buildDots() {
+  const wrap = document.getElementById('step-dots');
+  wrap.innerHTML = '';
+  questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    const isDone = answers[i] !== null && String(answers[i]).trim() !== '';
+    d.className = 'step-dot' + (i === current ? ' active' : isDone ? ' done' : '');
+    wrap.appendChild(d);
+  });
+}
+
+function render() {
+  const q = questions[current];
+  const val = answers[current];
+  const isAnswered = val !== null && String(val).trim() !== '';
+  let inner = '';
+
+  if (q.type === 'free-single') {
+    inner = `<textarea class="free-input single" id="free-input" placeholder="${q.placeholder}" oninput="onFree(this.value)">${val || ''}</textarea>`;
+  } else if (q.type === 'free') {
+    inner = `<textarea class="free-input" id="free-input" placeholder="${q.placeholder}" oninput="onFree(this.value)">${val || ''}</textarea>`;
+  } else {
+    const btns = [1,2,3,4,5,6,7,8,9,10].map(n => {
+      const sel = val === n ? ' selected' + (n >= 8 ? ' hi' : '') : '';
+      return `<button class="scale-btn${sel}" onclick="onScale(${n})" aria-label="${n}">${n}</button>`;
+    }).join('');
+    inner = `<div class="scale-grid">${btns}</div>
+      <div class="scale-ends">
+        <span class="scale-end">1 — ${q.low}</span>
+        <span class="scale-end">10 — ${q.high}</span>
+      </div>`;
+  }
+
+  const tagRQ = q.rq ? `<span class="q-tag rq">${q.rq}</span>` : '';
+  const hint = q.hint ? `<div class="q-hint">${q.hint}</div>` : '';
+
+  document.getElementById('q-container').innerHTML = `
+    <div class="q-card${isAnswered ? ' answered' : ''}">
+      <div class="q-meta"><span class="q-tag">${q.id}</span>${tagRQ}</div>
+      <div class="q-question">${q.text}</div>
+      ${hint}
+      ${inner}
+    </div>`;
+
+  updateNav();
+  buildDots();
+}
+
+function onFree(v) {
+  answers[current] = v;
+  const card = document.querySelector('.q-card');
+  if (v.trim()) card.classList.add('answered');
+  else card.classList.remove('answered');
+  updateNav();
+}
+
+function onScale(n) { answers[current] = n; render(); }
+
+function navigate(dir) {
+  if (questions[current].type !== 'scale') {
+    const ta = document.getElementById('free-input');
+    if (ta) answers[current] = ta.value.trim();
+  }
+  const next = current + dir;
+  if (next < 0) return;
+  if (next >= questions.length) { submitSurvey(); return; }
+  current = next;
+  render();
+}
+
+function updateNav() {
+  const isLast = current === questions.length - 1;
+  const allDone = answers.every((a,i) => a !== null && String(a).trim() !== '');
+  const btnNext = document.getElementById('btn-next');
+  document.getElementById('btn-prev').disabled = current === 0;
+  btnNext.disabled = isLast && !allDone;
+  btnNext.textContent = isLast ? 'Submeter ↗' : 'Seguinte →';
+  document.getElementById('progress-frac').textContent = `Pergunta ${current + 1} de 8`;
+  document.getElementById('nav-step').textContent = `${current + 1} / 8`;
+  document.getElementById('progress-fill').style.width = (((current + 1) / 8) * 100) + '%';
+}
+
+async function submitSurvey() {
+  document.getElementById('error-msg').style.display = 'none';
+  document.getElementById('submit-overlay').classList.add('active');
+  const payload = {};
+  questions.forEach((q, i) => { payload[q.id] = answers[i]; });
+  try {
+    await fetch(SHEETS_URL, {
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    document.getElementById('submit-overlay').classList.remove('active');
+    showResults();
+  } catch(err) {
+    document.getElementById('submit-overlay').classList.remove('active');
+    document.getElementById('error-msg').style.display = 'block';
+  }
+}
+
+function showResults() {
+  document.getElementById('survey-section').style.display = 'none';
+  document.getElementById('results-section').style.display = 'block';
+  const list = document.getElementById('results-list');
+  list.innerHTML = questions.map((q, i) => {
+    const v = answers[i];
+    const tagRQ = q.rq ? `<span class="res-tag rq">${q.rq}</span>` : '';
+    let valHtml = '';
+    if (q.type === 'scale') {
+      const pct = ((v || 0) / 10 * 100).toFixed(0);
+      valHtml = `<div class="res-scale">
+        <div class="res-num">${v || 0}<sup>/10</sup></div>
+        <div class="res-bar-wrap">
+          <div class="res-bar-track"><div class="res-bar-fill" style="width:${pct}%"></div></div>
+          <div class="res-bar-ends"><span>${q.low}</span><span>${q.high}</span></div>
+        </div>
+      </div>`;
+    } else {
+      valHtml = `<div class="res-free">${v || '—'}</div>`;
+    }
+    return `<div class="res-card" style="animation-delay:${i*0.05}s">
+      <div class="res-card-top"><span class="res-tag">${q.id}</span>${tagRQ}<span class="res-question">${q.short}</span></div>
+      ${valHtml}
+    </div>`;
+  }).join('');
+}
+
+function resetSurvey() {
+  answers = new Array(8).fill(null);
+  current = 0;
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('survey-section').style.display = 'block';
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
