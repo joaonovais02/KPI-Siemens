@@ -82,9 +82,22 @@
   .scale-btn:hover { background:var(--sh-teal-light); border-color:var(--sh-teal); color:var(--sh-teal-dark); transform:translateY(-2px); box-shadow:0 3px 8px rgba(0,153,153,0.15); }
   .scale-btn.selected { background:var(--sh-teal); border-color:var(--sh-teal); color:white; transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,153,153,0.3); }
   .scale-btn.selected.hi { background:var(--sh-orange); border-color:var(--sh-orange); box-shadow:0 4px 12px rgba(236,102,2,0.3); }
-  .scale-ends { display:flex; justify-content:space-between; padding:0 1px; }
+  .scale-ends { display:flex; justify-content:space-between; padding:0 1px; margin-bottom:20px; }
   .scale-end { font-size:11px; color:var(--sh-muted); max-width:130px; line-height:1.3; }
   .scale-end:last-child { text-align:right; }
+
+  /* COMMENT FIELD */
+  .comment-block { margin-top:4px; border-top:1px dashed rgba(0,0,0,0.08); padding-top:16px; }
+  .comment-toggle { display:flex; align-items:center; gap:7px; background:none; border:none; cursor:pointer; font-family:'Source Sans 3',sans-serif; font-size:13px; color:var(--sh-muted); padding:0; transition:color 0.2s; margin-bottom:0; }
+  .comment-toggle:hover { color:var(--sh-teal-dark); }
+  .comment-toggle svg { width:15px; height:15px; transition:transform 0.25s; flex-shrink:0; }
+  .comment-toggle.open { color:var(--sh-teal-dark); }
+  .comment-toggle.open svg { transform:rotate(180deg); }
+  .comment-area { display:none; margin-top:12px; }
+  .comment-area.open { display:block; animation:fadeUp 0.2s ease both; }
+  .comment-input { width:100%; border:1.5px solid rgba(0,153,153,0.25); border-radius:var(--radius-sm); padding:11px 14px; font-size:14px; font-family:'Source Sans 3',sans-serif; font-weight:300; color:var(--sh-text); background:#fafffe; resize:none; min-height:76px; outline:none; transition:border-color 0.2s,box-shadow 0.2s; line-height:1.6; }
+  .comment-input:focus { border-color:var(--sh-teal); box-shadow:0 0 0 3px rgba(0,153,153,0.1); }
+  .comment-input::placeholder { color:rgba(107,123,123,0.45); font-style:italic; }
 
   .nav-row { display:flex; align-items:center; gap:10px; animation:fadeUp 0.4s 0.1s ease both; }
   .btn { display:inline-flex; align-items:center; gap:7px; padding:11px 22px; border-radius:var(--radius-sm); font-size:14px; font-weight:600; font-family:'Source Sans 3',sans-serif; cursor:pointer; border:none; outline:none; transition:all 0.18s; }
@@ -120,13 +133,15 @@
   .res-tag.rq { background:var(--sh-orange-light); color:var(--sh-orange); }
   .res-question { font-size:12px; color:var(--sh-muted); flex:1; line-height:1.4; }
   .res-free { font-size:15px; color:var(--sh-text-mid); line-height:1.65; padding:11px 14px; background:var(--sh-off); border-radius:var(--radius-sm); border-left:3px solid var(--sh-teal); font-weight:300; }
-  .res-scale { display:flex; align-items:center; gap:16px; }
+  .res-scale { display:flex; align-items:center; gap:16px; margin-bottom:0; }
   .res-num { font-family:'Source Serif 4',serif; font-size:30px; font-weight:600; color:var(--sh-teal); min-width:48px; line-height:1; }
   .res-num sup { font-family:'Source Sans 3',sans-serif; font-size:13px; color:var(--sh-muted); font-weight:300; }
   .res-bar-wrap { flex:1; }
   .res-bar-track { height:5px; background:var(--sh-teal-light); border-radius:99px; overflow:hidden; margin-bottom:5px; }
   .res-bar-fill { height:100%; background:var(--sh-teal); border-radius:99px; transition:width 0.9s cubic-bezier(0.4,0,0.2,1); }
   .res-bar-ends { display:flex; justify-content:space-between; font-size:10px; color:rgba(107,123,123,0.6); }
+  .res-comment { margin-top:12px; padding:10px 14px; background:var(--sh-orange-light); border-radius:var(--radius-sm); border-left:3px solid var(--sh-orange); font-size:13px; color:var(--sh-text-mid); font-weight:300; line-height:1.55; font-style:italic; }
+  .res-comment-label { font-size:10px; font-weight:600; color:var(--sh-orange); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:4px; font-style:normal; }
   .results-actions { display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; align-items:center; animation:fadeUp 0.4s 0.2s ease both; }
   .error-msg { font-size:13px; color:#c0392b; display:none; margin-top:10px; padding:10px 14px; background:#fdf0f0; border-radius:var(--radius-sm); border-left:3px solid #c0392b; }
 
@@ -251,66 +266,19 @@
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbziQ3uHRu7yigt4fCi5bM93go20wLTKAc44YW2Bi5esk758ZUm1L-Umbc7VUp3qW588ew/exec";
 
 const questions = [
-  {
-    id:'Q1', rq:null, type:'free-single',
-    text:'Há quantos anos trabalha na Siemens Healthineers?',
-    hint:'Indique o número de anos de experiência na empresa, arredondado ao ano.',
-    placeholder:'Ex: 3 anos',
-    short:'Anos de experiência na empresa'
-  },
-  {
-    id:'Q2', rq:null, type:'free',
-    text:'Qual é a sua função actual e quais são as suas principais responsabilidades?',
-    hint:'Descreva brevemente o seu cargo e as tarefas do dia-a-dia que lhe estão atribuídas.',
-    placeholder:'Ex: Técnico de logística, responsável pela gestão de stocks e coordenação de entregas...',
-    short:'Função actual e responsabilidades'
-  },
-  {
-    id:'Q3', rq:'RQ1', type:'scale',
-    text:'Na sua opinião, existem falhas ou dificuldades na forma como os KPIs são actualmente monitorizados na empresa?',
-    hint:'1 = Não existem quaisquer falhas &nbsp;·&nbsp; 10 = Existem falhas muito graves',
-    low:'Sem falhas', high:'Falhas muito graves',
-    short:'Falhas na monitorização actual de KPIs'
-  },
-  {
-    id:'Q4', rq:'RQ2', type:'scale',
-    text:'De que forma as limitações actuais afectam o seu trabalho e a capacidade de tomar decisões com base em dados?',
-    hint:'1 = Não têm qualquer impacto &nbsp;·&nbsp; 10 = Têm um impacto muito elevado',
-    low:'Sem impacto', high:'Impacto muito elevado',
-    short:'Impacto das limitações no trabalho diário'
-  },
-  {
-    id:'Q5', rq:'RQ3', type:'scale',
-    text:'Considera que o sector da tecnologia médica está a caminhar para uma gestão mais automatizada e orientada por dados?',
-    hint:'1 = Não existe essa tendência &nbsp;·&nbsp; 10 = É uma tendência muito clara e acelerada',
-    low:'Sem tendência', high:'Tendência muito clara',
-    short:'Tendência de evolução do sector'
-  },
-  {
-    id:'Q6', rq:'RQ4', type:'scale',
-    text:'Em que medida a utilização de sistemas de informação dispersos e pouco integrados dificulta a monitorização do desempenho?',
-    hint:'1 = Não dificulta &nbsp;·&nbsp; 10 = É a principal causa das dificuldades',
-    low:'Não dificulta', high:'Principal causa',
-    short:'Dispersão de sistemas como causa das dificuldades'
-  },
-  {
-    id:'Q7', rq:'RQ5', type:'scale',
-    text:'Qual é a necessidade que sente de ter uma plataforma centralizada com dashboards e KPIs actualizados para a sua área de trabalho?',
-    hint:'1 = Não sinto qualquer necessidade &nbsp;·&nbsp; 10 = É uma necessidade urgente',
-    low:'Sem necessidade', high:'Necessidade urgente',
-    short:'Necessidade de uma solução centralizada'
-  },
-  {
-    id:'Q8', rq:'RQ6', type:'scale',
-    text:'Que impacto positivo espera que uma nova solução de monitorização de KPIs venha a ter na sua área e na organização?',
-    hint:'1 = Não espero grande impacto &nbsp;·&nbsp; 10 = Espero um impacto muito significativo',
-    low:'Impacto reduzido', high:'Impacto muito significativo',
-    short:'Impacto esperado da nova solução'
-  }
+  { id:'Q1', rq:null, type:'free-single', text:'Há quantos anos trabalha na Siemens Healthineers?', hint:'Indique o número de anos de experiência na empresa, arredondado ao ano.', placeholder:'Ex: 3 anos', short:'Anos de experiência na empresa' },
+  { id:'Q2', rq:null, type:'free', text:'Qual é a sua função actual e quais são as suas principais responsabilidades?', hint:'Descreva brevemente o seu cargo e as tarefas do dia-a-dia que lhe estão atribuídas.', placeholder:'Ex: Técnico de logística, responsável pela gestão de stocks e coordenação de entregas...', short:'Função actual e responsabilidades' },
+  { id:'Q3', rq:'RQ1', type:'scale', text:'Na sua opinião, existem falhas ou dificuldades na forma como os KPIs são actualmente monitorizados na empresa?', hint:'1 = Não existem quaisquer falhas &nbsp;·&nbsp; 10 = Existem falhas muito graves', low:'Sem falhas', high:'Falhas muito graves', short:'Falhas na monitorização actual de KPIs' },
+  { id:'Q4', rq:'RQ2', type:'scale', text:'De que forma as limitações actuais afectam o seu trabalho e a capacidade de tomar decisões com base em dados?', hint:'1 = Não têm qualquer impacto &nbsp;·&nbsp; 10 = Têm um impacto muito elevado', low:'Sem impacto', high:'Impacto muito elevado', short:'Impacto das limitações no trabalho diário' },
+  { id:'Q5', rq:'RQ3', type:'scale', text:'Considera que o sector da tecnologia médica está a caminhar para uma gestão mais automatizada e orientada por dados?', hint:'1 = Não existe essa tendência &nbsp;·&nbsp; 10 = É uma tendência muito clara e acelerada', low:'Sem tendência', high:'Tendência muito clara', short:'Tendência de evolução do sector' },
+  { id:'Q6', rq:'RQ4', type:'scale', text:'Em que medida a utilização de sistemas de informação dispersos e pouco integrados dificulta a monitorização do desempenho?', hint:'1 = Não dificulta &nbsp;·&nbsp; 10 = É a principal causa das dificuldades', low:'Não dificulta', high:'Principal causa', short:'Dispersão de sistemas como causa das dificuldades' },
+  { id:'Q7', rq:'RQ5', type:'scale', text:'Qual é a necessidade que sente de ter uma plataforma centralizada com dashboards e KPIs actualizados para a sua área de trabalho?', hint:'1 = Não sinto qualquer necessidade &nbsp;·&nbsp; 10 = É uma necessidade urgente', low:'Sem necessidade', high:'Necessidade urgente', short:'Necessidade de uma solução centralizada' },
+  { id:'Q8', rq:'RQ6', type:'scale', text:'Que impacto positivo espera que uma nova solução de monitorização de KPIs venha a ter na sua área e na organização?', hint:'1 = Não espero grande impacto &nbsp;·&nbsp; 10 = Espero um impacto muito significativo', low:'Impacto reduzido', high:'Impacto muito significativo', short:'Impacto esperado da nova solução' }
 ];
 
 let current = 0;
 let answers = new Array(8).fill(null);
+let comments = new Array(8).fill('');
 
 function buildDots() {
   const wrap = document.getElementById('step-dots');
@@ -323,10 +291,25 @@ function buildDots() {
   });
 }
 
+function toggleComment(btn) {
+  btn.classList.toggle('open');
+  const area = btn.nextElementSibling;
+  area.classList.toggle('open');
+  if (area.classList.contains('open')) {
+    area.querySelector('.comment-input').focus();
+  }
+}
+
+function saveComment(el) {
+  comments[current] = el.value;
+}
+
 function render() {
   const q = questions[current];
   const val = answers[current];
   const isAnswered = val !== null && String(val).trim() !== '';
+  const commentVal = comments[current] || '';
+  const commentOpen = commentVal.trim() !== '';
   let inner = '';
 
   if (q.type === 'free-single') {
@@ -354,6 +337,20 @@ function render() {
       <div class="q-question">${q.text}</div>
       ${hint}
       ${inner}
+      <div class="comment-block">
+        <button class="comment-toggle${commentOpen ? ' open' : ''}" onclick="toggleComment(this)">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 4h12M2 8h8M2 12h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Adicionar comentário ou observação (opcional)
+          <svg viewBox="0 0 16 16" fill="none" style="margin-left:auto">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="comment-area${commentOpen ? ' open' : ''}">
+          <textarea class="comment-input" placeholder="Partilhe aqui qualquer observação, contexto adicional ou exemplo concreto que considere relevante…" oninput="saveComment(this)">${commentVal}</textarea>
+        </div>
+      </div>
     </div>`;
 
   updateNav();
@@ -375,6 +372,9 @@ function navigate(dir) {
     const ta = document.getElementById('free-input');
     if (ta) answers[current] = ta.value.trim();
   }
+  const commentEl = document.querySelector('.comment-input');
+  if (commentEl) comments[current] = commentEl.value;
+
   const next = current + dir;
   if (next < 0) return;
   if (next >= questions.length) { submitSurvey(); return; }
@@ -395,10 +395,18 @@ function updateNav() {
 }
 
 async function submitSurvey() {
+  const commentEl = document.querySelector('.comment-input');
+  if (commentEl) comments[current] = commentEl.value;
+
   document.getElementById('error-msg').style.display = 'none';
   document.getElementById('submit-overlay').classList.add('active');
+
   const payload = {};
-  questions.forEach((q, i) => { payload[q.id] = answers[i]; });
+  questions.forEach((q, i) => {
+    payload[q.id] = answers[i];
+    payload[q.id + '_comentario'] = comments[i] || '';
+  });
+
   try {
     await fetch(SHEETS_URL, {
       method:'POST', mode:'no-cors',
@@ -419,6 +427,7 @@ function showResults() {
   const list = document.getElementById('results-list');
   list.innerHTML = questions.map((q, i) => {
     const v = answers[i];
+    const c = comments[i];
     const tagRQ = q.rq ? `<span class="res-tag rq">${q.rq}</span>` : '';
     let valHtml = '';
     if (q.type === 'scale') {
@@ -433,15 +442,18 @@ function showResults() {
     } else {
       valHtml = `<div class="res-free">${v || '—'}</div>`;
     }
+    const commentHtml = c && c.trim() ? `<div class="res-comment"><div class="res-comment-label">Comentário</div>${c}</div>` : '';
     return `<div class="res-card" style="animation-delay:${i*0.05}s">
       <div class="res-card-top"><span class="res-tag">${q.id}</span>${tagRQ}<span class="res-question">${q.short}</span></div>
       ${valHtml}
+      ${commentHtml}
     </div>`;
   }).join('');
 }
 
 function resetSurvey() {
   answers = new Array(8).fill(null);
+  comments = new Array(8).fill('');
   current = 0;
   document.getElementById('results-section').style.display = 'none';
   document.getElementById('survey-section').style.display = 'block';
